@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}__TODO LIST__{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info">
+                <strong>{{ message }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="text-center">__TODO LIST__</h1>
+            <br />
+
+            {% for todo in data %}
+                <div class="card {% if todo.completed %}completed{% endif %}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ todo.title }}</h5>
+                        <p class="card-text">{{ todo.detail }}</p>
+                        <p class="card-text">{{ todo.date }}</p>
+
+                        
+                            <form method="POST" action="{% url 'complete' todo.id %}" style="margin-bottom: 10px;">
+                                {% csrf_token %}
+                                <button value="complete" type="submit" class="btn btn-success">
+                                    {% if todo.completed %}
+                                        <span class="glyphicon glyphicon-ok"></span> Completed
+                                    {% else %}
+                                        <span class="glyphicon glyphicon-check"></span> Mark as Completed
+                                    {% endif %}
+                                </button>
+                            </form>
+                        
+
+                        <form method="POST" action="{% url 'remove' todo.id %}">
+                            {% csrf_token %}
+                            <button value="remove" type="submit" class="btn btn-primary float-right">
+                                <span class="glyphicon glyphicon-trash"></span> Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-md-1"></div>
+
+        <div class="col-md-3">
+            <div class="submit_form">
+                <!-- TodoForm -->
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in forms %}
+                        <div class="form-group">
+                            <br>
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-default" value="Submit" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
